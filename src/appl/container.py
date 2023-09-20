@@ -16,3 +16,11 @@ class Container(IContainer):
         self.register(
             CreateCalendar(self.resolve(SAContext), self.resolve(SACalendarRepo))
         )
+
+
+container = Container()
+
+
+def compose_container():
+    global container
+    container.compose()
