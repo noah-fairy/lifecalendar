@@ -28,16 +28,27 @@ class Calendar:
 
     @classmethod
     def create(cls, name: str, birthday: datetime.date, lifespan: int) -> Calendar:
-        return cls(
-            id=uuid.uuid4(),
-            name=name,
-            birthday=birthday,
-            lifespan=lifespan,
-            years=[
-                Year(yearnum=yearnum)
-                for yearnum in range(birthday.year, birthday.year + lifespan + 1)
-            ],
+        instance = cls(
+            id=uuid.uuid4(), name=name, birthday=birthday, lifespan=lifespan, years=[]
         )
+        instance._update_years()
+        return instance
+
+    def update_basic_info(
+        self, name: str, birthday: datetime.date, lifespan: int
+    ) -> None:
+        self.name = name
+        self.birthday = birthday
+        self.lifespan = lifespan
+        self._update_years()
+
+    def _update_years(self) -> None:
+        self.years = [
+            Year(yearnum=yearnum)
+            for yearnum in range(
+                self.birthday.year, self.birthday.year + self.lifespan + 1
+            )
+        ]
 
 
 class Year:
