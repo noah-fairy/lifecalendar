@@ -1,5 +1,6 @@
 from src.appl.create_calendar import CreateCalendar
 from src.appl.i_container import IContainer
+from src.appl.update_calendar import UpdateCalendar
 from src.infra.repo.sa import SA
 from src.infra.repo.sa_calendar_repo import SACalendarRepo
 from src.infra.repo.sa_context import SAContext
@@ -15,6 +16,9 @@ class Container(IContainer):
         # application
         self.register(
             CreateCalendar(self.resolve(SAContext), self.resolve(SACalendarRepo))
+        )
+        self.register(
+            UpdateCalendar(self.resolve(SAContext), self.resolve(SACalendarRepo))
         )
 
 
