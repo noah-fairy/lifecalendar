@@ -17,11 +17,14 @@ class IContainer(abc.ABC):
     def resolve(self, type_: Type[T]) -> T:
         impl_type = type_
         if inspect.isabstract(type_):
-            impl_types = type_.__subclasses__()
-            if len(impl_types) == 0:
-                raise NotRegisteredTypeError(f"type: {type_}")
+            impl_type = None
+            for t, o in self.obj_map.items():
+                if isinstance(o, type_):
+                    impl_type = t
+                    break  # just use first implementation
 
-            impl_type = impl_types[0]
+            if impl_type is None:
+                raise NotRegisteredTypeError(f"type: {type_}")
 
         try:
             obj = self.obj_map[impl_type]
@@ -32,7 +35,7 @@ class IContainer(abc.ABC):
 
     @abc.abstractmethod
     def compose(self) -> None:
-        pass
+        ...
 
 
 class NotRegisteredTypeError(Exception):
