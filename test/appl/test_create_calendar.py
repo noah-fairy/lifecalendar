@@ -1,18 +1,16 @@
 import datetime
 
-from src.appl.container import Container
 from src.appl.create_calendar import CreateCalendar
-from src.infra.db.mapper import map_between_model_and_schema
+from src.appl.i_container import IContainer
 
 
 class TestCreateCalendar:
-    def test_run(self):
-        map_between_model_and_schema()
-        container = Container()
-        container.compose()
+    def test_run(self, container: IContainer):
         command = container.resolve(CreateCalendar)
 
         name = "고도"
         birthday = datetime.date(1988, 6, 21)
         lifespan = 80
         command.run(name, birthday, lifespan)
+
+        assert command.calendar_repo.save.call_count == 1
