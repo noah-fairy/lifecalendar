@@ -34,6 +34,10 @@ class IContainer(abc.ABC):
         return obj
 
     @abc.abstractmethod
+    def compose_by_env(self) -> None:
+        ...
+
+    @abc.abstractmethod
     def compose(self) -> None:
         ...
 
