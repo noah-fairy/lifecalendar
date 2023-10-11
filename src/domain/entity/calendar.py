@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import datetime
 import uuid
-from typing import Literal
+from typing import Literal, TypeAlias
+
+TimeType: TypeAlias = Literal["before_born", "past", "now", "future", "after_death"]
 
 
 class Calendar:
@@ -107,9 +109,7 @@ class Week:
         self.lifespan = lifespan
 
     @property
-    def time_type(
-        self,
-    ) -> Literal["before_born", "past", "now", "future", "after_death"]:
+    def time_type(self) -> TimeType:
         past_year = self.yearnum < self.today.year
         this_year = self.yearnum == self.today.year
         future_year = self.yearnum > self.today.year
