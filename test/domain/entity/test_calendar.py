@@ -1,6 +1,6 @@
 import datetime
 
-from src.domain.entity.calendar import Calendar
+from src.domain.entity.calendar import Calendar, Week
 
 
 class TestCalendar:
@@ -29,3 +29,76 @@ class TestCalendar:
         assert calendar.lifespan == lifespan
         assert len(calendar.years) == lifespan + 1
         assert len(calendar.years[0].weeks) == 52
+
+
+class TestWeek:
+    def test_time_type_before_born(self):
+        week = Week(
+            yearnum=1987,
+            weeknum=1,
+            today=datetime.date.today(),
+            birthday=datetime.date(1988, 6, 21),
+            lifespan=100,
+        )
+        assert week.time_type == "before_born"
+
+        week = Week(
+            yearnum=1988,
+            weeknum=1,
+            today=datetime.date.today(),
+            birthday=datetime.date(1988, 6, 21),
+            lifespan=100,
+        )
+        assert week.time_type == "before_born"
+
+    def test_time_type_after_death(self):
+        week = Week(
+            yearnum=2089,
+            weeknum=1,
+            today=datetime.date.today(),
+            birthday=datetime.date(1988, 6, 21),
+            lifespan=100,
+        )
+        assert week.time_type == "after_death"
+
+        week = Week(
+            yearnum=2088,
+            weeknum=30,
+            today=datetime.date.today(),
+            birthday=datetime.date(1988, 6, 21),
+            lifespan=100,
+        )
+        assert week.time_type == "after_death"
+
+    def test_time_type_past(self):
+        today = datetime.date(2023, 6, 21)
+        week = Week(
+            yearnum=2023,
+            weeknum=1,
+            today=today,
+            birthday=datetime.date(1988, 6, 21),
+            lifespan=100,
+        )
+        assert week.time_type == "past"
+
+    def test_time_type_now(self):
+        today = datetime.date(2023, 6, 21)
+        week = Week(
+            yearnum=2023,
+            weeknum=today.isocalendar().week,
+            today=today,
+            birthday=datetime.date(1988, 6, 21),
+            lifespan=100,
+        )
+        assert week.time_type == "now"
+
+    def test_time_type_future(self):
+        today = datetime.date(2023, 6, 21)
+        week = Week(
+            yearnum=2023,
+            weeknum=52,
+            today=today,
+            birthday=datetime.date(1988, 6, 21),
+            lifespan=100,
+        )
+        assert week.time_type == "future"

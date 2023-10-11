@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 import uuid
+from typing import Literal
 
 
 class Calendar:
@@ -9,7 +10,6 @@ class Calendar:
     name: str
     birthday: datetime.date
     lifespan: int
-    years: list[Year]
 
     def __init__(
         self,
@@ -18,20 +18,20 @@ class Calendar:
         name: str,
         birthday: datetime.date,
         lifespan: int,
-        years: list[Year],
     ) -> None:
         self.id = id
         self.name = name
         self.birthday = birthday
         self.lifespan = lifespan
-        self.years = years
 
     @classmethod
     def create(cls, name: str, birthday: datetime.date, lifespan: int) -> Calendar:
         instance = cls(
-            id=uuid.uuid4(), name=name, birthday=birthday, lifespan=lifespan, years=[]
+            id=uuid.uuid4(),
+            name=name,
+            birthday=birthday,
+            lifespan=lifespan,
         )
-        instance._update_years()
         return instance
 
     def update_basic_info(
@@ -40,11 +40,16 @@ class Calendar:
         self.name = name
         self.birthday = birthday
         self.lifespan = lifespan
-        self._update_years()
 
-    def _update_years(self) -> None:
-        self.years = [
-            Year(yearnum=yearnum)
+    @property
+    def years(self) -> list[Year]:
+        return [
+            Year(
+                yearnum=yearnum,
+                today=datetime.date.today(),
+                birthday=self.birthday,
+                lifespan=self.lifespan,
+            )
             for yearnum in range(
                 self.birthday.year, self.birthday.year + self.lifespan + 1
             )
@@ -55,17 +60,91 @@ class Year:
     yearnum: int
     weeks: list[Week]
 
-    def __init__(self, *, yearnum: int) -> None:
+    def __init__(
+        self,
+        *,
+        yearnum: int,
+        today: datetime.date,
+        birthday: datetime.date,
+        lifespan: int,
+    ) -> None:
         self.yearnum = yearnum
         self.weeks = [
-            Week(yearnum=yearnum, weeknum=weeknum) for weeknum in range(1, 53)
+            Week(
+                yearnum=yearnum,
+                weeknum=weeknum,
+                today=today,
+                birthday=birthday,
+                lifespan=lifespan,
+            )
+            for weeknum in range(1, 53)
         ]
 
 
 class Week:
     yearnum: int
     weeknum: int
+    today: datetime.date
+    birthday: datetime.date
+    lifespan: int
 
-    def __init__(self, *, yearnum: int, weeknum: int) -> None:
+    def __init__(
+        self,
+        *,
+        yearnum: int,
+        weeknum: int,
+        today: datetime.date,
+        birthday: datetime.date,
+        lifespan: int,
+    ) -> None:
+        if not 1 <= weeknum <= 52:
+            raise ValueError(f"invalid weeknum: {weeknum}")
+
         self.yearnum = yearnum
         self.weeknum = weeknum
+        self.today = today
+        self.birthday = birthday
+        self.lifespan = lifespan
+
+    @property
+    def time_type(
+        self,
+    ) -> Literal["before_born", "past", "now", "future", "after_death"]:
+        past_year = self.yearnum < self.today.year
+        this_year = self.yearnum == self.today.year
+        future_year = self.yearnum > self.today.year
+
+        before_born_year = self.yearnum < self.birthday.year
+        born_year = self.yearnum == self.birthday.year
+        death_year = self.yearnum == self.birthday.year + self.lifespan
+        after_death_year = self.yearnum > self.birthday.year + self.lifespan
+
+        before_today_week_number = self.weeknum < self.today.isocalendar().week
+        today_week_number = self.weeknum == self.today.isocalendar().week
+        after_today_week_number = self.weeknum > self.today.isocalendar().week
+
+        before_birthday_week_number = self.weeknum < self.birthday.isocalendar().week
+        _birthday_week_number = self.weeknum == self.birthday.isocalendar().week
+        after_birthday_week_number = self.weeknum > self.birthday.isocalendar().week
+
+        before_born = before_born_year or (born_year and before_birthday_week_number)
+        after_death = after_death_year or (death_year and after_birthday_week_number)
+        past = past_year or (this_year and before_today_week_number)
+        now = this_year and today_week_number
+        future = future_year or (this_year and after_today_week_number)
+
+        match (before_born, after_death, past, now, future):
+            case (True, False, True, False, False):
+                return "before_born"
+            case (False, True, False, False, True):
+                return "after_death"
+            case (False, False, True, False, False):
+                return "past"
+            case (False, False, False, True, False):
+                return "now"
+            case (False, False, False, False, True):
+                return "future"
+            case _:
+                raise ValueError(
+                    f"invalid time type: {before_born} {after_death} {past} {now} {future}"
+                )
