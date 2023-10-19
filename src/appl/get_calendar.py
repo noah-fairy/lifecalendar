@@ -1,13 +1,13 @@
 import uuid
 
 from src.appl.dto import Resp
-from src.appl.dto.calendar import CalendarResp
+from src.appl.dto.calendar import CalendarDetailResp
 from src.domain.repo.i_calendar_repo import ICalendarRepo
 from src.domain.repo.i_db_context import IDBContext
 
 
 class GetCalendarResp(Resp):
-    calendar: CalendarResp
+    calendar: CalendarDetailResp
 
 
 class GetCalendar:
@@ -18,4 +18,4 @@ class GetCalendar:
     def run(self, calendar_id: uuid.UUID) -> GetCalendarResp:
         with self.db_context.begin_tx():
             cal = self.calendar_repo.get_or_error(calendar_id)
-            return GetCalendarResp(calendar=CalendarResp.create(cal))
+            return GetCalendarResp(calendar=CalendarDetailResp.create(cal))

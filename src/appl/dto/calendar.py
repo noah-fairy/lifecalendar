@@ -26,4 +26,6 @@ class CalendarResp(Resp):
     birthday: datetime.date
     lifespan: int
 
+
+class CalendarDetailResp(CalendarResp):
     years: list[YearResp]
