@@ -1,21 +1,21 @@
-import uuid
-
 from src.appl.dto import Resp
-from src.appl.dto.calendar import CalendarDetailResp
+from src.appl.dto.calendar import CalendarResp
 from src.domain.repo.i_calendar_repo import ICalendarRepo
 from src.domain.repo.i_db_context import IDBContext
 
 
-class GetCalendarResp(Resp):
-    calendar: CalendarDetailResp
+class GetCalendarListResp(Resp):
+    calendars: list[CalendarResp]
 
 
-class GetCalendar:
+class GetCalendarList:
     def __init__(self, db_context: IDBContext, calendar_repo: ICalendarRepo) -> None:
         self.db_context = db_context
         self.calendar_repo = calendar_repo
 
-    def run(self, calendar_id: uuid.UUID) -> GetCalendarResp:
+    def run(self) -> GetCalendarListResp:
         with self.db_context.begin_tx():
-            cal = self.calendar_repo.get_or_error(calendar_id)
-            return GetCalendarResp(calendar=CalendarDetailResp.create(cal))
+            cals = self.calendar_repo.get_all()
+            return GetCalendarListResp(
+                calendars=[CalendarResp.create(cal) for cal in cals]
+            )

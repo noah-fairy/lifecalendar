@@ -7,9 +7,15 @@ from pydantic import BaseModel
 from src.appl.container import container
 from src.appl.create_calendar import CreateCalendar
 from src.appl.get_calendar import GetCalendar, GetCalendarResp
+from src.appl.get_calendar_list import GetCalendarList, GetCalendarListResp
 from src.appl.update_calendar import UpdateCalendar
 
 api_router_calendar = APIRouter(prefix="/calendar")
+
+
+@api_router_calendar.get("", response_model=GetCalendarListResp)
+async def get_list():
+    return container.resolve(GetCalendarList).run()
 
 
 class CreateCalendarReq(BaseModel):
