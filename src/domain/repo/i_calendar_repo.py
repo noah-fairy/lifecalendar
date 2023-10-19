@@ -3,4 +3,5 @@ from src.domain.repo.i_repo import IRepo
 
 
 class ICalendarRepo(IRepo[Calendar]):
-    ...
+    def get_all(self) -> list[Calendar]:
+        ...
