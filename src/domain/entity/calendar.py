@@ -11,6 +11,7 @@ class Calendar:
     id: uuid.UUID
     name: str
     birthday: datetime.date
+    deathday: datetime.date
     lifespan: int
     _today: datetime.date
 
@@ -25,6 +26,9 @@ class Calendar:
         self.id = id
         self.name = name
         self.birthday = birthday
+        self.deathday = datetime.date(
+            birthday.year + lifespan, birthday.month, birthday.day
+        )
         self.lifespan = lifespan
         self._today = datetime.date.today()
 
@@ -65,7 +69,7 @@ class Calendar:
     @property
     def future_week_count(self) -> int:
         this_year = 52 - self._today.isocalendar().week
-        last_year = self.birthday.isocalendar().week - 1
+        last_year = self.deathday.isocalendar().week
         middle_years = 52 * (self.birthday.year + self.lifespan - self._today.year - 2)
         return this_year + middle_years + last_year
 
