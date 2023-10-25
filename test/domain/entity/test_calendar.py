@@ -30,6 +30,13 @@ class TestCalendar:
         assert len(calendar.years) == lifespan + 1
         assert len(calendar.years[0].weeks) == 52
 
+    def test_age(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+        assert calendar.age == 35
+
+        calendar = Calendar.create("고도", datetime.date(1988, 12, 31), 80)
+        assert calendar.age == 34
+
 
 class TestWeek:
     def test_time_type_before_born(self):

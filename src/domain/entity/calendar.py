@@ -44,6 +44,14 @@ class Calendar:
         self.lifespan = lifespan
 
     @property
+    def age(self) -> int:
+        today = datetime.date.today()
+        age = today.year - self.birthday.year
+        if today.month < self.birthday.month and today.day < self.birthday.day:
+            age -= 1
+        return age
+
+    @property
     def years(self) -> list[Year]:
         return [
             Year(
