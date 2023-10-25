@@ -60,6 +60,12 @@ class Calendar:
         return age
 
     @property
+    def total_percentage(self) -> float:
+        total_day_count = (self.deathday - self.birthday).days
+        past_day_count = (self._today - self.birthday).days
+        return round(past_day_count / total_day_count * 100, 2)
+
+    @property
     def past_week_count(self) -> int:
         first_year = 52 - self.birthday.isocalendar().week + 1
         this_year = self._today.isocalendar().week

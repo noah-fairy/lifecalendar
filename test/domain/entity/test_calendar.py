@@ -37,6 +37,10 @@ class TestCalendar:
         calendar = Calendar.create("고도", datetime.date(1988, 12, 31), 80)
         assert calendar.age == 34
 
+    def test_total_percentage(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+        assert calendar.total_percentage == 44.18
+
     def test_past_week_count(self):
         calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
         assert calendar.past_week_count == 1787
