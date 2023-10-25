@@ -1,4 +1,5 @@
 import datetime
+from unittest import mock
 
 from src.domain.entity.calendar import Calendar, Week
 
@@ -29,6 +30,35 @@ class TestCalendar:
         assert calendar.lifespan == lifespan
         assert len(calendar.years) == lifespan + 1
         assert len(calendar.years[0].weeks) == 52
+
+    def test_this_year_percentage(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+
+        assert calendar.this_year_percentage == 81.37
+
+    def test_deathday(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+
+        assert calendar.deathday == datetime.date(2068, 6, 21)
+
+    def test_age(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+        assert calendar.age == 35
+
+        calendar = Calendar.create("고도", datetime.date(1988, 12, 31), 80)
+        assert calendar.age == 34
+
+    def test_total_percentage(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+        assert calendar.total_percentage == 44.18
+
+    def test_past_week_count(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+        assert calendar.past_week_count == 1787
+
+    def test_future_week_count(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+        assert calendar.future_week_count == 2270
 
 
 class TestWeek:

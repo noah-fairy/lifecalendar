@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 import uuid
+from functools import cached_property
 from typing import Literal, TypeAlias
 
 TimeType: TypeAlias = Literal["before_born", "past", "now", "future", "after_death"]
@@ -43,12 +44,65 @@ class Calendar:
         self.birthday = birthday
         self.lifespan = lifespan
 
-    @property
+    @cached_property
+    def _today(self) -> datetime.date:
+        return datetime.date.today()
+
+    @cached_property
+    def this_year_percentage(self) -> float:
+        past_day_count = (self._today - datetime.date(self._today.year, 1, 1)).days
+        return round(past_day_count / 365 * 100, 2)
+
+    @cached_property
+    def this_year_past_week_count(self) -> int:
+        return self._today.isocalendar().week
+
+    @cached_property
+    def this_year_future_week_count(self) -> int:
+        return 52 - self._today.isocalendar().week
+
+    @cached_property
+    def deathday(self) -> datetime.date:
+        return datetime.date(
+            self.birthday.year + self.lifespan, self.birthday.month, self.birthday.day
+        )
+
+    @cached_property
+    def age(self) -> int:
+        age = self._today.year - self.birthday.year
+        if (
+            self._today.month < self.birthday.month
+            and self._today.day < self.birthday.day
+        ):
+            age -= 1
+        return age
+
+    @cached_property
+    def total_percentage(self) -> float:
+        total_day_count = (self.deathday - self.birthday).days
+        past_day_count = (self._today - self.birthday).days
+        return round(past_day_count / total_day_count * 100, 2)
+
+    @cached_property
+    def past_week_count(self) -> int:
+        first_year = 52 - self.birthday.isocalendar().week + 1
+        this_year = self._today.isocalendar().week
+        middle_years = 52 * (self._today.year - self.birthday.year - 2)
+        return first_year + middle_years + this_year
+
+    @cached_property
+    def future_week_count(self) -> int:
+        this_year = 52 - self._today.isocalendar().week
+        last_year = self.deathday.isocalendar().week
+        middle_years = 52 * (self.birthday.year + self.lifespan - self._today.year - 2)
+        return this_year + middle_years + last_year
+
+    @cached_property
     def years(self) -> list[Year]:
         return [
             Year(
                 yearnum=yearnum,
-                today=datetime.date.today(),
+                today=self._today,
                 birthday=self.birthday,
                 lifespan=self.lifespan,
             )
@@ -108,7 +162,7 @@ class Week:
         self.birthday = birthday
         self.lifespan = lifespan
 
-    @property
+    @cached_property
     def time_type(self) -> TimeType:
         past_year = self.yearnum < self.today.year
         this_year = self.yearnum == self.today.year
