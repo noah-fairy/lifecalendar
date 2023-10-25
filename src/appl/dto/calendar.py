@@ -26,6 +26,9 @@ class CalendarResp(Resp):
     birthday: datetime.date
     lifespan: int
 
+    this_year_percentage: float
+    this_year_past_week_count: int
+    this_year_future_week_count: int
     deathday: datetime.date
     age: int
     total_percentage: float

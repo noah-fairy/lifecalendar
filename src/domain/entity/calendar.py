@@ -49,6 +49,19 @@ class Calendar:
         return datetime.date.today()
 
     @cached_property
+    def this_year_percentage(self) -> float:
+        past_day_count = (self._today - datetime.date(self._today.year, 1, 1)).days
+        return round(past_day_count / 365 * 100, 2)
+
+    @cached_property
+    def this_year_past_week_count(self) -> int:
+        return self._today.isocalendar().week
+
+    @cached_property
+    def this_year_future_week_count(self) -> int:
+        return 52 - self._today.isocalendar().week
+
+    @cached_property
     def deathday(self) -> datetime.date:
         return datetime.date(
             self.birthday.year + self.lifespan, self.birthday.month, self.birthday.day
