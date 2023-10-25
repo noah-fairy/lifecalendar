@@ -26,6 +26,12 @@ class CalendarResp(Resp):
     birthday: datetime.date
     lifespan: int
 
+    deathday: datetime.date
+    age: int
+    total_percentage: float
+    past_week_count: int
+    future_week_count: int
+
 
 class CalendarDetailResp(CalendarResp):
     years: list[YearResp]

@@ -30,6 +30,11 @@ class TestCalendar:
         assert len(calendar.years) == lifespan + 1
         assert len(calendar.years[0].weeks) == 52
 
+    def test_deathday(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+
+        assert calendar.deathday == datetime.date(2068, 6, 21)
+
     def test_age(self):
         calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
         assert calendar.age == 35
@@ -47,7 +52,7 @@ class TestCalendar:
 
     def test_future_week_count(self):
         calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
-        assert calendar.future_week_count == 2269
+        assert calendar.future_week_count == 2270
 
 
 class TestWeek:
