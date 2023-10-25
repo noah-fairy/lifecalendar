@@ -37,6 +37,14 @@ class TestCalendar:
         calendar = Calendar.create("고도", datetime.date(1988, 12, 31), 80)
         assert calendar.age == 34
 
+    def test_past_week_count(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+        assert calendar.past_week_count == 1787
+
+    def test_future_week_count(self):
+        calendar = Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+        assert calendar.future_week_count == 2269
+
 
 class TestWeek:
     def test_time_type_before_born(self):

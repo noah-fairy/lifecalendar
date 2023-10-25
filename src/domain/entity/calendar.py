@@ -12,6 +12,7 @@ class Calendar:
     name: str
     birthday: datetime.date
     lifespan: int
+    _today: datetime.date
 
     def __init__(
         self,
@@ -25,6 +26,7 @@ class Calendar:
         self.name = name
         self.birthday = birthday
         self.lifespan = lifespan
+        self._today = datetime.date.today()
 
     @classmethod
     def create(cls, name: str, birthday: datetime.date, lifespan: int) -> Calendar:
@@ -45,18 +47,34 @@ class Calendar:
 
     @property
     def age(self) -> int:
-        today = datetime.date.today()
-        age = today.year - self.birthday.year
-        if today.month < self.birthday.month and today.day < self.birthday.day:
+        age = self._today.year - self.birthday.year
+        if (
+            self._today.month < self.birthday.month
+            and self._today.day < self.birthday.day
+        ):
             age -= 1
         return age
+
+    @property
+    def past_week_count(self) -> int:
+        first_year = 52 - self.birthday.isocalendar().week + 1
+        this_year = self._today.isocalendar().week
+        middle_years = 52 * (self._today.year - self.birthday.year - 2)
+        return first_year + middle_years + this_year
+
+    @property
+    def future_week_count(self) -> int:
+        this_year = 52 - self._today.isocalendar().week
+        last_year = self.birthday.isocalendar().week - 1
+        middle_years = 52 * (self.birthday.year + self.lifespan - self._today.year - 2)
+        return this_year + middle_years + last_year
 
     @property
     def years(self) -> list[Year]:
         return [
             Year(
                 yearnum=yearnum,
-                today=datetime.date.today(),
+                today=self._today,
                 birthday=self.birthday,
                 lifespan=self.lifespan,
             )
