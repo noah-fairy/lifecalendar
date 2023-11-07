@@ -1,7 +1,7 @@
 import datetime
 
+from src.appl.cal.update_calendar import UpdateCalendar
 from src.appl.i_container import IContainer
-from src.appl.update_calendar import UpdateCalendar
 from src.domain.entity.calendar import Calendar
 
 
