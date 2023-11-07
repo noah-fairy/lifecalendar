@@ -14,8 +14,8 @@ class SACalendarRepo(ICalendarRepo):
     def get(self, id: uuid.UUID) -> Calendar | None:
         return self.sa.session.get(Calendar, id)
 
-    def get_all(self) -> list[Calendar]:
-        stmt = select(Calendar)
+    def get_all_by_user_id(self, user_id: uuid.UUID) -> list[Calendar]:
+        stmt = select(Calendar).where(Calendar.user_id == user_id)
         return list(self.sa.session.execute(stmt).scalars().all())
 
     def save(self, entity: Calendar) -> None:

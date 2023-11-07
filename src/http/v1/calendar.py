@@ -15,8 +15,8 @@ api_router_calendar = APIRouter(prefix="/calendar")
 
 
 @api_router_calendar.get("", response_model=GetCalendarListResp)
-async def get_list():
-    return container.resolve(GetCalendarList).run()
+async def get_list(user_id: uuid.UUID = Depends(get_user_id)):
+    return container.resolve(GetCalendarList).run(user_id)
 
 
 class CreateCalendarReq(BaseModel):
