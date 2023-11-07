@@ -19,19 +19,24 @@ class Calendar:
         self,
         *,
         id: uuid.UUID,
+        user_id: uuid.UUID,
         name: str,
         birthday: datetime.date,
         lifespan: int,
     ) -> None:
         self.id = id
+        self.user_id = user_id
         self.name = name
         self.birthday = birthday
         self.lifespan = lifespan
 
     @classmethod
-    def create(cls, name: str, birthday: datetime.date, lifespan: int) -> Calendar:
+    def create(
+        cls, user_id: uuid.UUID, name: str, birthday: datetime.date, lifespan: int
+    ) -> Calendar:
         instance = cls(
             id=uuid.uuid4(),
+            user_id=user_id,
             name=name,
             birthday=birthday,
             lifespan=lifespan,

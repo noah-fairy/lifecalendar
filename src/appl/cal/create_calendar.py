@@ -1,4 +1,5 @@
 import datetime
+import uuid
 
 from src.domain.entity.calendar import Calendar
 from src.domain.repo.i_calendar_repo import ICalendarRepo
@@ -10,7 +11,9 @@ class CreateCalendar:
         self.db_context = db_context
         self.calendar_repo = calendar_repo
 
-    def run(self, name: str, birthday: datetime.date, lifespan: int) -> None:
+    def run(
+        self, user_id: uuid.UUID, name: str, birthday: datetime.date, lifespan: int
+    ) -> None:
         with self.db_context.begin_tx():
-            cal = Calendar.create(name, birthday, lifespan)
+            cal = Calendar.create(user_id, name, birthday, lifespan)
             self.calendar_repo.save(cal)

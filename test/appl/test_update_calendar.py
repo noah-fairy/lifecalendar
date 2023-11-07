@@ -1,4 +1,5 @@
 import datetime
+import uuid
 
 from src.appl.cal.update_calendar import UpdateCalendar
 from src.appl.i_container import IContainer
@@ -21,4 +22,4 @@ class TestUpdateCalendar:
         assert calendar.lifespan == lifespan
 
     def _create_calendar(self) -> Calendar:
-        return Calendar.create("고도", datetime.date(1988, 6, 21), 80)
+        return Calendar.create(uuid.uuid4(), "고도", datetime.date(1988, 6, 21), 80)

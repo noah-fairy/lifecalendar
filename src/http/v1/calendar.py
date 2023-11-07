@@ -1,7 +1,7 @@
 import datetime
 import uuid
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from src.appl.cal.create_calendar import CreateCalendar
@@ -9,6 +9,7 @@ from src.appl.cal.get_calendar import GetCalendar, GetCalendarResp
 from src.appl.cal.get_calendar_list import GetCalendarList, GetCalendarListResp
 from src.appl.cal.update_calendar import UpdateCalendar
 from src.appl.container import container
+from src.http.auth import get_user_id
 
 api_router_calendar = APIRouter(prefix="/calendar")
 
@@ -25,8 +26,8 @@ class CreateCalendarReq(BaseModel):
 
 
 @api_router_calendar.post("/create")
-async def create(req: CreateCalendarReq):
-    container.resolve(CreateCalendar).run(req.name, req.birthday, req.lifespan)
+async def create(req: CreateCalendarReq, user_id: uuid.UUID = Depends(get_user_id)):
+    container.resolve(CreateCalendar).run(user_id, req.name, req.birthday, req.lifespan)
 
 
 @api_router_calendar.get("/{calendar_id}", response_model=GetCalendarResp)
