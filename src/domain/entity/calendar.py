@@ -10,6 +10,7 @@ TimeType: TypeAlias = Literal["before_born", "past", "now", "future", "after_dea
 
 class Calendar:
     id: uuid.UUID
+    user_id: uuid.UUID
     name: str
     birthday: datetime.date
     lifespan: int
