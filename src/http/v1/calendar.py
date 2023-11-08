@@ -31,8 +31,8 @@ async def create(req: CreateCalendarReq, user_id: uuid.UUID = Depends(get_user_i
 
 
 @api_router_calendar.get("/{calendar_id}", response_model=GetCalendarResp)
-async def get(calendar_id: uuid.UUID):
-    return container.resolve(GetCalendar).run(calendar_id)
+async def get(calendar_id: uuid.UUID, user_id: uuid.UUID = Depends(get_user_id)):
+    return container.resolve(GetCalendar).run(user_id, calendar_id)
 
 
 class UpdateCalendarReq(BaseModel):

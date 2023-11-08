@@ -15,7 +15,9 @@ class GetCalendar:
         self.db_context = db_context
         self.calendar_repo = calendar_repo
 
-    def run(self, calendar_id: uuid.UUID) -> GetCalendarResp:
+    def run(self, user_id: uuid.UUID, calendar_id: uuid.UUID) -> GetCalendarResp:
         with self.db_context.begin_tx():
-            cal = self.calendar_repo.get_or_error(calendar_id)
+            cal = self.calendar_repo.get_by_id_and_user_id_or_error(
+                calendar_id, user_id
+            )
             return GetCalendarResp(calendar=CalendarDetailResp.create(cal))
