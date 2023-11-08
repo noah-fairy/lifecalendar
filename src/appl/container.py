@@ -2,11 +2,11 @@ from src.appl.auth.sign_in_password import SignInPassword
 from src.appl.auth.sign_in_session_id import SignInSessionID
 from src.appl.auth.sign_out import SignOut
 from src.appl.auth.sign_up import SignUp
-from src.appl.create_calendar import CreateCalendar
-from src.appl.get_calendar import GetCalendar
-from src.appl.get_calendar_list import GetCalendarList
+from src.appl.cal.create_calendar import CreateCalendar
+from src.appl.cal.get_calendar import GetCalendar
+from src.appl.cal.get_calendar_list import GetCalendarList
+from src.appl.cal.update_calendar import UpdateCalendar
 from src.appl.i_container import IContainer
-from src.appl.update_calendar import UpdateCalendar
 from src.config import config
 from src.domain.repo.i_calendar_repo import ICalendarRepo
 from src.domain.repo.i_db_context import IDBContext
