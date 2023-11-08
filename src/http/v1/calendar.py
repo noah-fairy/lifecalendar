@@ -42,7 +42,11 @@ class UpdateCalendarReq(BaseModel):
 
 
 @api_router_calendar.post("/{calendar_id}/update")
-async def update(calendar_id: uuid.UUID, req: UpdateCalendarReq):
+async def update(
+    calendar_id: uuid.UUID,
+    req: UpdateCalendarReq,
+    user_id: uuid.UUID = Depends(get_user_id),
+):
     container.resolve(UpdateCalendar).run(
-        calendar_id, req.name, req.birthday, req.lifespan
+        user_id, calendar_id, req.name, req.birthday, req.lifespan
     )

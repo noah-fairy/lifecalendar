@@ -11,8 +11,15 @@ class UpdateCalendar:
         self.calendar_repo = calendar_repo
 
     def run(
-        self, calendar_id: uuid.UUID, name: str, birthday: datetime.date, lifespan: int
+        self,
+        user_id: uuid.UUID,
+        calendar_id: uuid.UUID,
+        name: str,
+        birthday: datetime.date,
+        lifespan: int,
     ) -> None:
         with self.db_context.begin_tx():
-            calendar = self.calendar_repo.get_or_error(calendar_id)
+            calendar = self.calendar_repo.get_by_id_and_user_id_or_error(
+                calendar_id, user_id
+            )
             calendar.update_basic_info(name, birthday, lifespan)
