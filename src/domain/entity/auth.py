@@ -39,6 +39,7 @@ class User:
         if not self._is_password_correct(password):
             raise WrongPasswordError
 
+        self.session.refresh_token()
         self.session.force_extend()
 
     def authenticate(self) -> None:
@@ -68,17 +69,23 @@ class Session:
         *,
         id: uuid.UUID,
         user_id: uuid.UUID,
+        token: str,
+        expired_at: datetime.datetime,
+        last_accessed_at: datetime.datetime,
     ) -> None:
         self.id = id
         self.user_id = user_id
-
-        now = datetime.datetime.now()
-        self.expired_at = now + datetime.timedelta(days=7)
-        self.last_accessed_at = now
+        self.token = token
+        self.expired_at = expired_at
+        self.last_accessed_at = last_accessed_at
 
     @classmethod
     def create(cls, user_id: uuid.UUID) -> Session:
-        return cls(id=uuid.uuid4(), user_id=user_id)
+        now = datetime.datetime.now()
+        return cls(id=uuid.uuid4(), user_id=user_id, token=uuid.uuid4().hex, expired_at=now + datetime.timedelta(days=7), last_accessed_at=now)
+
+    def refresh_token(self) -> None:
+        self.token  = uuid.uuid4().hex
 
     def extend(self) -> None:
         if self._is_expired:
