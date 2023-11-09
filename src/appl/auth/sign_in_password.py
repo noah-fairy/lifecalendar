@@ -6,7 +6,7 @@ from src.domain.repo.i_user_repo import IUserRepo
 
 
 class SignInPasswordResp(Resp):
-    access_token: uuid.UUID
+    access_token: str
 
 
 class SignInPassword:
@@ -18,4 +18,4 @@ class SignInPassword:
         with self.db_context.begin_tx():
             user = self.user_repo.get_by_email_or_error(email)
             user.authenticate_with_password(password)
-            return SignInPasswordResp(access_token=user.session.id)
+            return SignInPasswordResp(access_token=user.session.token)

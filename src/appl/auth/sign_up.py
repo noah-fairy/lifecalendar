@@ -7,7 +7,7 @@ from src.domain.repo.i_user_repo import IUserRepo
 
 
 class SignUpResp(Resp):
-    access_token: uuid.UUID
+    access_token: str
 
 
 class SignUp:
@@ -19,4 +19,4 @@ class SignUp:
         with self.db_context.begin_tx():
             user = User.create(email, password, password_confirm)
             self.user_repo.save(user)
-            return SignUpResp(access_token=user.session.id)
+            return SignUpResp(access_token=user.session.token)
