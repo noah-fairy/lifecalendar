@@ -41,12 +41,14 @@ class TestUser:
         user = User.create(
             email=email, password=password, password_confirm=password_confirm
         )
+        token_before_auth = user.session.token
         expired_at_before_auth = user.session.expired_at
         last_accessed_at_before_auth = user.session.last_accessed_at
 
         user.authenticate_with_password(password)
 
         assert user.session is not None
+        assert user.session.token != token_before_auth
         assert user.session.expired_at > expired_at_before_auth
         assert user.session.last_accessed_at > last_accessed_at_before_auth
 
@@ -63,6 +65,14 @@ class TestUser:
 
 
 class TestSession:
+    def test_refresh_token(self):
+        session = Session.create(uuid.uuid4())
+        token_before_refresh = session.token
+
+        session.refresh_token()
+
+        assert session.token != token_before_refresh
+
     def test_extend(self):
         session = Session.create(uuid.uuid4())
         expired_at_before_extend = session.expired_at
