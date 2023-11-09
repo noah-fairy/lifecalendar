@@ -59,6 +59,7 @@ class User:
 class Session:
     id: uuid.UUID
     user_id: uuid.UUID
+    token: str
     expired_at: datetime.datetime
     last_accessed_at: datetime.datetime
 

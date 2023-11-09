@@ -29,6 +29,7 @@ auth_session = Table(
     metadata,
     Column("id", Uuid, primary_key=True),
     Column("user_id", Uuid),
+    Column("token", String(500)),
     Column("expired_at", DateTime),
     Column("last_accessed_at", DateTime),
     Column("inserted_at", DateTime, default=datetime.datetime.utcnow),
