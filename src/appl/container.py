@@ -1,5 +1,5 @@
 from src.appl.auth.sign_in_password import SignInPassword
-from src.appl.auth.sign_in_session_id import SignInSessionID
+from src.appl.auth.sign_in_token import SignInToken
 from src.appl.auth.sign_out import SignOut
 from src.appl.auth.sign_up import SignUp
 from src.appl.cal.create_calendar import CreateCalendar
@@ -45,7 +45,7 @@ class Container(IContainer):
         self.register(SignUp(self.resolve(IDBContext), self.resolve(IUserRepo)))
         self.register(SignInPassword(self.resolve(IDBContext), self.resolve(IUserRepo)))
         self.register(
-            SignInSessionID(self.resolve(IDBContext), self.resolve(IUserRepo))
+            SignInToken(self.resolve(IDBContext), self.resolve(IUserRepo))
         )
         self.register(SignOut(self.resolve(IDBContext), self.resolve(IUserRepo)))
 

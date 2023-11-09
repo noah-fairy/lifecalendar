@@ -3,7 +3,7 @@ import uuid
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from src.appl.auth.sign_in_session_id import SignInSessionID
+from src.appl.auth.sign_in_token import SignInToken
 from src.appl.container import container
 
 oauth2_password_bearer = OAuth2PasswordBearer(
@@ -12,6 +12,6 @@ oauth2_password_bearer = OAuth2PasswordBearer(
 
 
 async def get_user_id(token: str = Depends(oauth2_password_bearer)) -> uuid.UUID:
-    sign = container.resolve(SignInSessionID)
-    resp = sign.run(uuid.UUID(token))
+    sign = container.resolve(SignInToken)
+    resp = sign.run(token)
     return resp.user_id

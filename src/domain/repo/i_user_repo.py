@@ -15,5 +15,5 @@ class IUserRepo(IRepo[User]):
         ...
 
     @abc.abstractmethod
-    def get_by_session_id(self, session_id: uuid.UUID) -> User | None:
+    def get_by_token(self, token: str) -> User | None:
         ...

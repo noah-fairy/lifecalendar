@@ -124,5 +124,5 @@ class ExpiredSessionError(AuthError):
     pass
 
 
-class InvalidSessionIDError(AuthError):
+class InvalidAccessTokenError(AuthError):
     pass

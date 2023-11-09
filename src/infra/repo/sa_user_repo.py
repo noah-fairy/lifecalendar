@@ -28,6 +28,6 @@ class SAUserRepo(IUserRepo):
             raise RepositoryNotFoundError
         return user
 
-    def get_by_session_id(self, session_id: uuid.UUID) -> User | None:
-        stmt = select(User).join(User.session).where(Session.id == session_id).limit(1)
+    def get_by_token(self, token: str) -> User | None:
+        stmt = select(User).join(User.session).where(Session.token == token).limit(1)
         return self.sa.session.execute(stmt).scalars().first()
