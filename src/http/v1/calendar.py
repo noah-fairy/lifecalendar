@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from src.appl.cal.create_calendar import CreateCalendar
+from src.appl.cal.create_period import CreatePeriod
 from src.appl.cal.get_calendar import GetCalendar, GetCalendarResp
 from src.appl.cal.get_calendar_list import GetCalendarList, GetCalendarListResp
 from src.appl.cal.update_calendar import UpdateCalendar
@@ -49,4 +50,30 @@ async def update(
 ):
     container.resolve(UpdateCalendar).run(
         user_id, calendar_id, req.name, req.birthday, req.lifespan
+    )
+
+
+class CreatePeriodReq(BaseModel):
+    name: str
+    start_year: int
+    start_week: int
+    end_year: int
+    end_week: int
+    color: str
+
+
+@api_router_calendar.get("/{calendar_id}/period/create")
+async def create_period(
+    calendar_id: uuid.UUID,
+    req: CreatePeriodReq,
+    user_id: uuid.UUID = Depends(get_user_id),
+):
+    container.resolve(CreatePeriod).run(
+        calendar_id,
+        req.name,
+        req.start_year,
+        req.start_week,
+        req.end_year,
+        req.end_week,
+        req.color,
     )
