@@ -15,6 +15,20 @@ calendar = Table(
     Column("inserted_at", DateTime, default=datetime.datetime.utcnow),
 )
 
+calendar_period = Table(
+    "calendar_period",
+    metadata,
+    Column("id", Uuid, primary_key=True),
+    Column("calendar_id", Uuid),
+    Column("name", String(100)),
+    Column("start_year", Integer),
+    Column("start_week", Integer),
+    Column("end_year", Integer),
+    Column("end_week", Integer),
+    Column("color", String(30)),
+    Column("inserted_at", DateTime, default=datetime.datetime.utcnow),
+)
+
 user = Table(
     "user",
     metadata,
