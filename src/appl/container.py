@@ -3,6 +3,7 @@ from src.appl.auth.sign_in_token import SignInToken
 from src.appl.auth.sign_out import SignOut
 from src.appl.auth.sign_up import SignUp
 from src.appl.cal.create_calendar import CreateCalendar
+from src.appl.cal.create_period import CreatePeriod
 from src.appl.cal.get_calendar import GetCalendar
 from src.appl.cal.get_calendar_list import GetCalendarList
 from src.appl.cal.update_calendar import UpdateCalendar
@@ -41,12 +42,13 @@ class Container(IContainer):
         self.register(
             UpdateCalendar(self.resolve(IDBContext), self.resolve(ICalendarRepo))
         )
+        self.register(
+            CreatePeriod(self.resolve(IDBContext), self.resolve(ICalendarRepo))
+        )
 
         self.register(SignUp(self.resolve(IDBContext), self.resolve(IUserRepo)))
         self.register(SignInPassword(self.resolve(IDBContext), self.resolve(IUserRepo)))
-        self.register(
-            SignInToken(self.resolve(IDBContext), self.resolve(IUserRepo))
-        )
+        self.register(SignInToken(self.resolve(IDBContext), self.resolve(IUserRepo)))
         self.register(SignOut(self.resolve(IDBContext), self.resolve(IUserRepo)))
 
 
