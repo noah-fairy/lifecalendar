@@ -63,6 +63,19 @@ class TestCalendar:
         calendar = Calendar.create(uuid.uuid4(), "고도", datetime.date(1988, 6, 21), 80)
         assert calendar.future_week_count == 2270
 
+    def test_create_period(self):
+        calendar = Calendar.create(uuid.uuid4(), "고도", datetime.date(1988, 6, 21), 80)
+        name = "대학교"
+        start_year = 2007
+        start_week = 9
+        end_year = 2014
+        end_week = 8
+        color = "#000000"
+
+        calendar.create_period(name, start_year, start_week, end_year, end_week, color)
+
+        assert len(calendar.periods) == 1
+
 
 class TestWeek:
     def test_time_type_before_born(self):

@@ -5,6 +5,8 @@ import uuid
 from functools import cached_property
 from typing import Literal, TypeAlias
 
+from .period import Period
+
 TimeType: TypeAlias = Literal["before_born", "past", "now", "future", "after_death"]
 
 
@@ -14,6 +16,8 @@ class Calendar:
     name: str
     birthday: datetime.date
     lifespan: int
+
+    periods: list[Period]
 
     def __init__(
         self,
@@ -29,6 +33,8 @@ class Calendar:
         self.name = name
         self.birthday = birthday
         self.lifespan = lifespan
+
+        self.periods = []
 
     @classmethod
     def create(
@@ -116,6 +122,18 @@ class Calendar:
                 self.birthday.year, self.birthday.year + self.lifespan + 1
             )
         ]
+
+    def create_period(
+        self,
+        name: str,
+        start_year: int,
+        start_week: int,
+        end_year: int,
+        end_week: int,
+        color: str,
+    ) -> None:
+        period = Period.create(name, start_year, start_week, end_year, end_week, color)
+        self.periods.append(period)
 
 
 class Year:
